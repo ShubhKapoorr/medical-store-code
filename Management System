@@ -1,0 +1,322 @@
+import mysql.connector
+conn=mysql.connector.connect(host="localhost",user="root",password="Realsince@2002",database="medicalstore")
+cur=conn.cursor()
+
+def menu():
+    '''This function helps in displaying the menu.'''
+    print("                MENU              ")
+    print("Enter 1 to ADD OR DELETE A RECEIPT.")
+    print("Enter 2 to ADD OR UPDATE THE STOCK LIST.")
+    print("Enter 3 to ADD OR DELETE DATA OF THE EMPLOYEE WORKING AT THE STORE.")
+    print("Enter 4 to UPDATE THE DETAILS OF EMPLOYEES.")
+    print("Enter 5 to VIEW ALL THE RECEIPTS OR THE BILLS.")
+    print("Enter 6 to VIEW THE STOCK OF MEDICINES IN THE INVENTORY.")
+    print("Enter 7 to VIEW DETAILS OF ALL THE EMPLOYEES.")
+    
+    x=int(input("Enter your choice: "))
+    if x==1:
+        add_receipt()
+    elif x==2:
+        enter_newstock()
+    elif x==3:
+        add_details()
+    elif x==4:
+        update001()
+    elif x==5:
+        show_receipt()
+    elif x==6:
+        view_stock()
+    elif x==7:
+        view_details()
+    else:
+        print("Wrong choice selected")
+        print('\n'*10)
+        print('''===============================================================================================================''')
+        menu()
+
+def add_receipt():
+    '''This function displays a menu,giving an option for adding or deleting a receipt.'''
+    print('\n'*5)
+    print("         MENU")
+    print("Enter 1 to add a receipt.")
+    print("Enter 2 to delete a receipt.")
+    y=int(input("Enter your choice:"))
+    if y==1:
+        add()
+    elif y==2:
+        delete()
+    else:
+        print("Sorry..Wrong choice entered.")
+        print("Go back to menu.")
+        print('\n'*10)
+        print('''===============================================================================================================''')
+
+        menu()
+
+def add():
+    '''This function add a new receipt.'''
+    print('\n'*3)
+    ch="yes"
+    while (ch=="yes"):
+        m1=int(input("Enter the serial number:"))
+        m=input("Enter the name of the person:")
+        n=int(input("Enter the bill no.:"))
+        v=int(input("Enter the amount:"))
+        g=input("Enter the date(in this format- yyyy-mm-dd):")
+        j=input("Enter the medicines purchased:")
+        t3=input("Enter the name of the doctor who refered you these medcines:")
+        stmt="insert into billbook values({},'{}',{},{},'{}','{}','{}');".format(m1,m,n,v,g,j,t3)
+        cur.execute(stmt)
+        conn.commit()
+        print("Insertion Completed")
+        print("Want to insert more details??")
+        ch=input("Enter yes or no:")
+        print('\n'*10)
+    print("Go back to menu.")    
+    print('''===============================================================================================================''')
+
+    menu()
+def delete():
+    '''This function deletes a receipt from the database.'''
+    print('\n'*3)
+    l=int(input("Enter the bill no. or receipt no. you want to delete:"))
+    stmt="delete from billbook where Billno={};".format(l)
+    cur.execute(stmt)
+    conn.commit()
+    print("Deletion completed")
+    print("Go back to menu.")
+    
+    print('\n'*10)
+    print('''===============================================================================================================''')
+
+    menu()
+def show_receipt():
+    '''This function displays all the receipts present in the database.''' 
+    print('\n'*5)
+    print("Here are all the receipts from the database.")
+    stmt="select * from billbook;"
+    cur.execute(stmt)
+    hp=cur.fetchall()
+    print(hp)
+    
+    print("Go back to menu.")
+    
+    print('\n'*10)
+    print('''===============================================================================================================''')
+
+    menu()
+def view_stock():
+    '''Displays all the stocks that are present in the inventory.'''
+    print('\n'*5)
+    print("Here are all the stocks from the inventory.") 
+    stmt="select * from medstock;"
+    cur.execute(stmt)
+    hp=cur.fetchall()
+    print(hp)
+    print("Go back to menu.")
+    
+    print('\n'*10)
+    print('''===============================================================================================================''')
+
+    menu()
+
+def enter_newstock():
+    '''This function displays a menu,giving an option for adding or updating the stock.'''
+    print('\n'*5)
+    print("         MENU")
+    print("Enter 1 to add a new stock.")
+    print("Enter 2 to update the current stock of medicines.")
+    z=int(input("Enter your choice:"))
+    if z==1:
+        add1()
+    elif z==2:
+        update()
+    else:
+        print("Sorry..Wrong choice entered.")
+        print("Go back to menu.")
+        
+        print('\n'*10)
+        print('''===============================================================================================================''')
+
+        menu()
+        
+def add1():
+    '''This function helps in adding new stock to the inventory.''' 
+    print('\n'*3)
+    ch="yes"
+    while(ch=="yes"):
+        u1=int(input("Enter the serial number:"))
+        u=input("Enter the medicine name:")
+        p=input("Enter the name of the company:")
+        s=input("Enter quantity in packets:")
+        mac=input("Enter the expiry date(in this format: yyyy-mm-dd):")
+        stmt="insert into medstock values({},'{}','{}',{},'{}');".format(u1,u,p,s,mac)
+        cur.execute(stmt)
+        conn.commit()
+        print("Insertion completed.")
+        print("Want to enter more??")
+        ch=input("Enter yes or no:")
+        
+    print("Go back to menu.")
+
+    
+    print('\n'*10)
+    print('''===============================================================================================================''')
+
+    menu()
+def update():
+    '''This function helps in updating a stock.'''
+    print('\n'*3)
+    print("Enter 1 to update name of the medicine.")
+    print("Enter 2 to update the company name.")
+    print("Enter 3 to update the quantity of medicine")
+    q1=int(input("Enter your choice:"))
+    tax=input("Enter the serial number:")
+    if q1==1:
+        max1=input("Enter the name of the medicine:")
+        stmt="update medstock set NameofMedicine='{}' where Sno={};".format(max1,tax)
+        cur.execute(stmt)
+        conn.commit()
+        
+        print("updated.")
+    elif q1==2:
+        max2=input("Enter the name of the company:")
+        stmt="update medstock set CompanyName='{}' where Sno={};".format(max2,tax)
+        cur.execute(stmt)
+        conn.commit()
+        
+        print("updated.")
+    elif q1==3:
+        max3=input("Enter the quantity of medicine:")
+        stmt="update medstock set QuantityinPackets={} where Sno={};".format(max3,tax)
+        cur.execute(stmt)
+        conn.commit()
+        
+        print("updated.")
+    else:
+        print("Sorry..Wrong choice entered")
+        
+    print("Go back to menu.")
+    
+    print('\n'*10)
+    print('''===============================================================================================================''')
+
+    menu()
+def add_details():
+    '''This function displays a menu,giving an option for adding or deleting data of the employee.''' 
+    print('\n'*5)
+    print("         MENU")
+    print("Enter 1 to add the new employee's data.")
+    print("Enter 2 to delete the data.")
+    a=int(input("Enter your choice:"))
+    if a==1:
+        add2()
+    elif a==2:
+        delete1()
+    else:
+        print("Sorry..Wrong choice entered.")
+        
+        print("Go back to menu.")
+    
+        print('\n'*10)
+        print('''===============================================================================================================''')
+
+        menu()
+
+def add2():
+    print('\n'*3)
+    ch="yes"
+    while(ch=="yes"):
+        e1=int(input("Enter the serial number:"))
+        e=input("Enter the name of the employee:")
+        r=int(input("Enter the landline number:"))
+        t=input("Enter the address of the employee:")
+        stmt="insert into empdetails values({},'{}',{},'{}');".format(e1,e,r,t)
+        cur.execute(stmt)
+        conn.commit()
+        print("Details added.")
+        print("Want to enter more??")
+        ch=input("Enter yes or no:")
+    
+    print("Go back to menu.")
+    
+    print('\n'*10)
+    print('''===============================================================================================================''')
+
+    menu()
+def delete1():
+    '''This function helps in deleting data of the employee from the database.'''
+    print('\n'*3)
+    q=input("Enter the name of the employee whose data is to be deleted:")
+    stmt="delete from empdetails where Name='{}';".format(q)
+    cur.execute(stmt)
+    conn.commit()
+    print("Deletion completed.")
+    
+    print("Go back to menu.")
+    print('\n'*10)
+    print('''===============================================================================================================''')
+
+    menu()
+
+def view_details():
+    '''This function helps in viewing all details of the employees.'''  
+    print('\n'*5)
+    print("Here are all the details.")
+    stmt="select * from empdetails;"
+    cur.execute(stmt)
+    hp=cur.fetchall()
+    print(hp)
+    
+    print("Go back to menu.")
+    
+    print('\n'*10)
+    print('''===============================================================================================================''')
+
+    menu()
+def update001():
+    '''This function helps in updating details of the employees.'''
+    print('\n'*5)
+    print("Enter 1 to update name of the employee.")
+    print("Enter 2 to update landline number.")
+    print("Enter 3 to update the address of the employee.")
+    q1=int(input("Enter your choice:"))
+    tax=input("Enter the serial number:")
+    if q1==1:
+        max1=input("Enter the name of the employee:")
+        stmt="update empdetails set Name='{}' where Sno={};".format(max1,tax)
+        cur.execute(stmt)
+        conn.commit()
+        
+        print("updated.")
+    elif q1==2:
+        max2=input("Enter the landline number:")
+        stmt="update empdetails set LandlineNum='{}' where Sno={};".format(max2,tax)
+        cur.execute(stmt)
+        conn.commit()
+        
+        print("updated.")
+    elif q1==3:
+        max3=input("Enter the address of the employee:")
+        stmt="update empdetails set Address={} where Sno={};".format(max3,tax)
+        cur.execute(stmt)
+        conn.commit()
+        
+        print("updated.")
+    else:
+        print("Sorry..Wrong choice entered")
+        
+    print("Go back to menu.")
+
+    print('\n'*10)
+    print('''===============================================================================================================''')
+
+    menu()
+
+   
+menu()
+
+    
+
+    
+    
