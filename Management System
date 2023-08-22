@@ -1,5 +1,5 @@
 import mysql.connector
-conn=mysql.connector.connect(host="localhost",user="root",password="Realsince@2002",database="medicalstore")
+conn=mysql.connector.connect(host="localhost",user="root",password=" ",database="medicalstore")
 cur=conn.cursor()
 
 def menu():
